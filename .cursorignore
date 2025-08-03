@@ -1,0 +1,26 @@
+# Environment and sensitive files
+.env
+.env.*
+*.env
+.envrc
+.secrets
+
+# Private keys
+*.key
+*.pem
+private.json
+secrets.json
+
+# Blockchain related sensitive files
+mnemonic.txt
+seed.txt
+wallet.json
+keystore/
+
+# IDE and editor files
+.vscode/settings.json
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

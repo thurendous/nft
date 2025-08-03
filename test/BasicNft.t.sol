@@ -2,13 +2,14 @@
 
 pragma solidity ^0.8.18;
 
-import {Test, console2} from "forge-std/Test.sol";
-import {DeployBasicNft} from "../script/DeployBasicNft.s.sol";
-import {BasicNft} from "../src/BasicNft.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import { Test, console2 } from "forge-std/Test.sol";
+import { DeployBasicNft } from "../script/DeployBasicNft.s.sol";
+import { BasicNft } from "../src/BasicNft.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BasicNftTest is Test {
-    string public constant PUG = "https://ipfs.io/ipfs/QmYx6Gs7mPGSiG2PxvxtzMJpn9zTis6tz88d7dpx8tJ9d?filename=pug.png";
+    string public constant PUG_URL =
+        "https://ipfs.io/ipfs/QmYx6Gs7mPGSiG2PxvxtzMJpn9zTis6tz88d7dpx8tJ9d?filename=pug.png";
 
     DeployBasicNft public deployer;
     BasicNft public basicNft;
@@ -24,7 +25,7 @@ contract BasicNftTest is Test {
         vm.prank(ORIGINAL_MINTER_OWNER);
         basicNft.transferOwnership(DEFAULT_FOUNDRY_DEPLOYER);
         vm.prank(DEFAULT_FOUNDRY_DEPLOYER);
-        basicNft.mintNft(PUG);
+        basicNft.mintNft(PUG_URL);
     }
 
     function testNameIsCorrect() public view {
@@ -40,7 +41,7 @@ contract BasicNftTest is Test {
     }
 
     function testTokenURIIsCorrect() public view {
-        string memory expectedUri = PUG;
+        string memory expectedUri = PUG_URL;
         string memory actualUri = basicNft.tokenURI(0);
         assertEq(expectedUri, actualUri);
         assert(keccak256(abi.encodePacked(expectedUri)) == keccak256(abi.encodePacked(actualUri)));
@@ -48,13 +49,15 @@ contract BasicNftTest is Test {
 
     function testCanMintAndHaveBalance() public {
         vm.prank(DEFAULT_FOUNDRY_DEPLOYER);
-        basicNft.mintNft(PUG);
+        basicNft.mintNft(PUG_URL);
         assertEq(basicNft.balanceOf(DEFAULT_FOUNDRY_DEPLOYER), 2);
     }
 
-    function testRevertIfYouDontHavePermission() public {
-        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, user));
+    function testAnyoneCanMint() public {
+        // Test that anyone can mint NFTs
         vm.prank(user);
-        basicNft.mintNft(PUG);
+        basicNft.mintNft(PUG_URL);
+        assertEq(basicNft.balanceOf(user), 1);
+        assertEq(basicNft.tokenURI(1), PUG_URL);
     }
 }
