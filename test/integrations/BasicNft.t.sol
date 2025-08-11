@@ -3,8 +3,8 @@
 pragma solidity ^0.8.18;
 
 import { Test, console2 } from "forge-std/Test.sol";
-import { DeployBasicNft } from "../script/DeployBasicNft.s.sol";
-import { BasicNft } from "../src/BasicNft.sol";
+import { DeployBasicNft } from "../../script/DeployBasicNft.s.sol";
+import { BasicNft } from "../../src/BasicNft.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BasicNftTest is Test {
@@ -21,9 +21,15 @@ contract BasicNftTest is Test {
     function setUp() public {
         deployer = new DeployBasicNft();
         basicNft = deployer.run();
-        console2.log("onwer is : ", basicNft.owner());
-        vm.prank(ORIGINAL_MINTER_OWNER);
+        console2.log("owner is : ", basicNft.owner());
+
+        // 在 fork 测试中，使用实际的合约拥有者
+        address actualOwner = basicNft.owner();
+
+        // 转移所有权到 DEFAULT_FOUNDRY_DEPLOYER
+        vm.prank(actualOwner);
         basicNft.transferOwnership(DEFAULT_FOUNDRY_DEPLOYER);
+
         vm.prank(DEFAULT_FOUNDRY_DEPLOYER);
         basicNft.mintNft(PUG_URL);
     }

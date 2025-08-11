@@ -6,12 +6,15 @@ remappings = [
     "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts",
     "@openzeppelin/contracts-upgradeable=lib/openzeppelin-contracts-upgradeable/contracts",
 ]
-fs_permissions = [
-    { access = "read", path = "./images/" },
-    { access = "read", path = "./broadcast" },
-]
+
 
 ffi = true
+fs_permissions = [
+    { access = "read", path = "./img/" },
+    { access = "read", path = "./script/" },
+    { access = "read", path = "./broadcast/" },
+]
+
 
 [fmt]
 line_length = 120

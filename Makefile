@@ -22,6 +22,8 @@ build:; forge build
 
 test :; forge test 
 
+fork-test :; forge test --fork-url ${SEPOLIA_RPC_URL}
+
 zktest :; foundryup-zksync && forge test --zksync && foundryup
 
 snapshot :; forge snapshot
